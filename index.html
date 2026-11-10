@@ -1,0 +1,496 @@
+TESTE
+linha2<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz – Modernismo no Brasil</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
+    --txt:#f5f7ff; --mut:#a7b0d0;
+    --c1:#ff4d6d; --c2:#ffb703; --c3:#06d6a0; --c4:#4cc9f0; --vio:#8b5cf6;
+    --ok:#06d6a0; --bad:#ff4d6d;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    background:var(--bg); color:var(--txt);
+    min-height:100vh; display:flex; justify-content:center;
+    padding:3vh 3vw; overflow-x:hidden;
+  }
+  /* brilhos de fundo */
+  .glow{position:fixed; border-radius:50%; filter:blur(90px); opacity:.45; z-index:-1; animation:float 14s ease-in-out infinite alternate}
+  .g1{width:45vw;height:45vw;background:var(--vio);top:-15vw;left:-10vw}
+  .g2{width:38vw;height:38vw;background:var(--c1);bottom:-14vw;right:-8vw;animation-delay:-5s}
+  .g3{width:28vw;height:28vw;background:var(--c4);top:40%;left:55%;opacity:.25;animation-delay:-9s}
+  @keyframes float{to{transform:translate(4vw,3vw) scale(1.1)}}
+
+  .wrap{width:min(1080px,100%);margin:auto 0}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:28px;
+    padding:clamp(22px,4vw,52px); backdrop-filter:blur(18px);
+    box-shadow:0 30px 80px rgba(0,0,0,.45); position:relative;
+    animation:pop .45s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.98)}}
+  .hidden{display:none!important}
+
+  /* ---------- tela inicial ---------- */
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:.9rem;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin-bottom:18px}
+  .shapes{display:flex;gap:6px}
+  .shapes i{width:14px;height:14px;display:block}
+  .sh-t{width:0!important;height:0!important;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:14px solid var(--c1)}
+  .sh-c{border-radius:50%;background:var(--c2)}
+  .sh-s{background:var(--c3)}
+  .sh-d{background:var(--c4);transform:rotate(45deg) scale(.8)}
+  h1{font-size:clamp(2.4rem,7vw,5rem);line-height:.95;font-weight:900;letter-spacing:-2px}
+  .grad{background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c4));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:shine 6s linear infinite}
+  @keyframes shine{to{background-position:200% 0}}
+  .lead{color:var(--mut);font-size:clamp(1rem,2vw,1.25rem);margin:18px 0 30px;max-width:640px;line-height:1.5}
+  .lead em{color:var(--txt);font-style:normal;font-weight:600}
+
+  .label{font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+  .seg{display:inline-flex;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:22px}
+  .seg button{font:inherit;font-weight:700;border:none;background:none;color:var(--mut);padding:12px 22px;border-radius:12px;cursor:pointer;font-size:1.05rem;transition:.2s}
+  .seg button.on{background:var(--txt);color:var(--bg)}
+  .teams{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+  .teams input{font:inherit;font-size:1.05rem;color:var(--txt);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:14px;padding:14px 16px;width:min(280px,100%);outline:none}
+  .teams input:focus{border-color:var(--c4)}
+  .t1{border-left:5px solid var(--c1)!important} .t2{border-left:5px solid var(--c4)!important}
+  .toggles{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:30px}
+  .tg{display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--mut);font-size:1rem;user-select:none}
+  .tg input{display:none}
+  .tg span{width:44px;height:26px;border-radius:99px;background:rgba(255,255,255,.15);position:relative;transition:.2s}
+  .tg span::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s}
+  .tg input:checked + span{background:var(--c3)}
+  .tg input:checked + span::after{left:21px}
+
+  .cta{
+    font:inherit;font-weight:800;font-size:clamp(1.1rem,2.2vw,1.35rem);border:none;cursor:pointer;
+    padding:18px 36px;border-radius:18px;color:#0b1020;
+    background:linear-gradient(90deg,var(--c2),var(--c1));
+    box-shadow:0 12px 30px rgba(255,77,109,.35);transition:transform .15s, box-shadow .2s;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(255,77,109,.5)}
+  .ghost{font:inherit;font-weight:700;font-size:1.05rem;border:1px solid var(--line);background:none;color:var(--txt);padding:16px 26px;border-radius:16px;cursor:pointer}
+  .ghost:hover{background:rgba(255,255,255,.08)}
+  .keys{margin-top:26px;color:var(--mut);font-size:.85rem}
+  kbd{background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:inherit;color:var(--txt)}
+
+  /* ---------- jogo ---------- */
+  .hud{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .dots{display:flex;gap:7px}
+  .dots i{width:30px;height:8px;border-radius:99px;background:rgba(255,255,255,.14);transition:.3s}
+  .dots i.cur{background:var(--txt);width:44px}
+  .dots i.ok{background:var(--ok)} .dots i.bad{background:var(--bad)}
+  .chips{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-weight:700;font-size:1rem;display:flex;gap:8px;align-items:center;transition:.25s}
+  .chip.active{background:var(--txt);color:var(--bg);transform:scale(1.06)}
+  .chip .sw{width:10px;height:10px;border-radius:50%}
+  .streak{color:var(--c2)}
+  .bump{animation:bump .4s}
+  @keyframes bump{50%{transform:scale(1.25)}}
+
+  .qhead{display:flex;gap:24px;align-items:flex-start;margin-bottom:22px}
+  .qmeta{font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+  .qmeta b{color:var(--c2)}
+  .q{font-size:clamp(1.35rem,3.1vw,2.25rem);font-weight:800;line-height:1.25;letter-spacing:-.5px}
+  .ring{flex:none;width:78px;height:78px;position:relative}
+  .ring svg{transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:7}
+  .ring .bgc{stroke:rgba(255,255,255,.12)}
+  .ring .fgc{stroke:var(--c3);stroke-linecap:round;transition:stroke .3s}
+  .ring .num{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:1.5rem}
+  .ring.warn .fgc{stroke:var(--c1)} .ring.warn .num{color:var(--c1);animation:bump .5s infinite}
+
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:780px){.opts{grid-template-columns:1fr}.qhead{flex-direction:column-reverse;gap:14px}}
+  .opt{
+    font:inherit;text-align:left;cursor:pointer;color:var(--txt);
+    background:rgba(255,255,255,.05);border:2px solid var(--line);border-radius:20px;
+    padding:14px 18px;display:flex;gap:16px;align-items:center;min-height:76px;
+    font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.35;font-weight:600;
+    transition:transform .15s, border-color .2s, background .2s, opacity .3s;
+    animation:pop .4s backwards;
+  }
+  .opt:nth-child(2){animation-delay:.05s}.opt:nth-child(3){animation-delay:.1s}.opt:nth-child(4){animation-delay:.15s}
+  .opt:hover:not(:disabled){transform:translateY(-3px);border-color:var(--k);background:rgba(255,255,255,.09)}
+  .badge{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--k);position:relative}
+  .badge::before{content:"";display:block}
+  .opt:nth-child(1){--k:var(--c1)} .opt:nth-child(2){--k:var(--c2)} .opt:nth-child(3){--k:var(--c3)} .opt:nth-child(4){--k:var(--c4)}
+  /* formas geométricas dentro dos selos (homenagem à arte concreta) */
+  .opt:nth-child(1) .badge::before{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:17px solid #fff}
+  .opt:nth-child(2) .badge::before{width:18px;height:18px;border-radius:50%;background:#fff}
+  .opt:nth-child(3) .badge::before{width:17px;height:17px;background:#fff}
+  .opt:nth-child(4) .badge::before{width:15px;height:15px;background:#fff;transform:rotate(45deg)}
+  .badge small{position:absolute;bottom:-7px;right:-7px;background:var(--bg);border:1px solid var(--line);color:var(--mut);font-size:.7rem;border-radius:6px;padding:0 5px}
+  .opt:disabled{cursor:default}
+  .opt.dim{opacity:.28}
+  .opt.right{border-color:var(--ok);background:rgba(6,214,160,.15);opacity:1}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,77,109,.15);animation:shake .4s}
+  @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  .bottom{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap;min-height:58px}
+  .hint{color:var(--c2);font-size:1.05rem;display:none}
+  .fb{display:none;margin-top:16px;border-radius:20px;padding:20px 22px;background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.4);font-size:clamp(1rem,1.7vw,1.15rem);line-height:1.5;animation:pop .35s}
+  .fb.bad{background:rgba(255,77,109,.1);border-color:rgba(255,77,109,.4)}
+  .fb h3{font-size:1.3rem;margin-bottom:6px}
+  .fb.ok h3{color:var(--ok)} .fb.bad h3{color:var(--bad)}
+
+  /* ---------- fim ---------- */
+  .final{text-align:center}
+  .score-big{font-size:clamp(4rem,14vw,9rem);font-weight:900;line-height:1;margin:10px 0}
+  .msg{color:var(--mut);font-size:1.25rem;margin-bottom:28px}
+  .vs{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:24px 0}
+  .vs div{flex:1;min-width:210px;max-width:320px;border-radius:24px;padding:24px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+  .vs div.win{background:linear-gradient(135deg,rgba(255,183,3,.25),rgba(255,77,109,.25));border-color:var(--c2)}
+  .vs .n{font-size:3.5rem;font-weight:900}
+  .review{text-align:left;margin:10px 0 28px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:16px 20px}
+  .review summary{cursor:pointer;font-weight:700}
+  .review li{margin:10px 0 0 20px;color:var(--mut);line-height:1.4}
+  .review li b{color:var(--txt)}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  @media (max-height:820px){.q{font-size:clamp(1.2rem,2.6vw,1.8rem)}.opt{min-height:64px;padding:11px 16px}.card{padding:28px 40px}.fb{padding:14px 18px}}
+  .fs{position:fixed;top:18px;right:18px;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--txt);font-size:1.3rem;cursor:pointer;z-index:5}
+  .confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:9;animation:fall linear forwards;pointer-events:none}
+  @keyframes fall{to{transform:translateY(110vh) rotate(900deg)}}
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+<button class="fs" id="fsBtn" title="Tela cheia (F)">⛶</button>
+
+<div class="wrap">
+  <!-- INÍCIO -->
+  <section class="card" id="start">
+    <div class="eyebrow"><span class="shapes"><i class="sh-t"></i><i class="sh-c"></i><i class="sh-s"></i><i class="sh-d"></i></span> Quiz da turma</div>
+    <h1>Modernismo<br><span class="grad">no Brasil</span></h1>
+    <p class="lead">Museus e Bienais, Concretismo, Neoconcretismo e Artes Gráficas.<br>
+      Baseado em <em>Modernismo no Brasil: panorama das artes visuais</em>, de Beá Meira, páginas 36 a 49.</p>
+
+    <div class="label">Modo de jogo</div>
+    <div class="seg" id="modeSeg">
+      <button class="on" data-mode="solo">Turma toda</button>
+      <button data-mode="teams">Duas equipes</button>
+    </div>
+    <div class="teams hidden" id="teamInputs">
+      <input id="t1" class="t1" value="Equipe Ruptura" maxlength="22" aria-label="Equipe 1">
+      <input id="t2" class="t2" value="Equipe Frente" maxlength="22" aria-label="Equipe 2">
+    </div>
+    <div class="toggles">
+      <label class="tg"><input type="checkbox" id="useTimer" checked><span></span>Cronômetro de 30 s</label>
+      <label class="tg"><input type="checkbox" id="shuffle" checked><span></span>Embaralhar alternativas</label>
+    </div>
+    <button class="cta" id="startBtn">Começar o jogo →</button>
+    <p class="keys"><kbd>1</kbd>–<kbd>4</kbd> responder · <kbd>Enter</kbd> avançar · <kbd>D</kbd> dica · <kbd>F</kbd> tela cheia</p>
+  </section>
+
+  <!-- JOGO -->
+  <section class="card hidden" id="game">
+    <div class="hud">
+      <div class="dots" id="dots"></div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="qhead">
+      <div style="flex:1">
+        <div class="qmeta" id="qmeta"></div>
+        <p class="q" id="question"></p>
+      </div>
+      <div class="ring" id="ring">
+        <svg width="78" height="78"><circle class="bgc" cx="39" cy="39" r="33"/><circle class="fgc" id="arc" cx="39" cy="39" r="33"/></svg>
+        <div class="num" id="secs">30</div>
+      </div>
+    </div>
+    <div class="opts" id="options"></div>
+    <div class="fb" id="feedback"></div>
+    <div class="bottom">
+      <div><button class="ghost" id="hintBtn">💡 Dica</button><span class="hint" id="hint"></span></div>
+      <button class="cta hidden" id="nextBtn">Próxima →</button>
+    </div>
+  </section>
+
+  <!-- FIM -->
+  <section class="card final hidden" id="end">
+    <div class="eyebrow" style="justify-content:center;width:100%"><span class="shapes"><i class="sh-t"></i><i class="sh-c"></i><i class="sh-s"></i><i class="sh-d"></i></span> Resultado</div>
+    <h1 id="endTitle" style="font-size:clamp(2rem,5vw,3.4rem)"></h1>
+    <div id="endBody"></div>
+    <details class="review"><summary>Ver as respostas certas</summary><ol id="reviewList"></ol></details>
+    <div class="btns">
+      <button class="cta" id="againBtn">Jogar de novo ↺</button>
+      <button class="ghost" id="homeBtn">Início</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [
+  { page:"p. 36", topic:"Museus e Bienais",
+    q:"Por que o fim da Segunda Guerra (1945) foi o momento ideal para montar no Brasil uma coleção europeia de grande valor?",
+    o:["O Brasil tinha reservas acumuladas, e a Europa, empobrecida, vendia obras a preço baixo.",
+       "O governo brasileiro obrigou os museus europeus a emprestar suas obras ao país.",
+       "Artistas europeus fugiram da guerra para o Brasil e doaram ao país suas coleções particulares.",
+       "Os Estados Unidos compraram obras na Europa e as repassaram aos museus brasileiros."],
+    a:0, hint:"Pense na situação econômica da Europa e do Brasil depois da guerra.",
+    ex:"A Europa estava empobrecida e precisava ser reconstruída. Nesse cenário surgiram o Masp, o MAM de São Paulo e o MAM do Rio, criados por empresários no fim dos anos 1940." },
+
+  { page:"p. 36", topic:"Masp",
+    q:"Por que Lina Bo Bardi projetou o Masp da Avenida Paulista sobre dois pilares laterais, com um vão livre de 74 metros?",
+    o:["Para criar uma praça coberta onde aconteceriam as Bienais de São Paulo.",
+       "Para seguir o modelo do MoMA de Nova York, que inspirou a criação do museu.",
+       "Para respeitar o compromisso de manter a vista do mirante do Trianon.",
+       "Para cumprir uma regra da prefeitura que proibia prédios altos na avenida."],
+    a:2, hint:"O terreno ficava num lugar com uma vista famosa da cidade.",
+    ex:"O projeto é de 1958, e o prédio foi inaugurado em 1968. Antes disso, o Masp (criado em 1947 por Assis Chateaubriand) funcionava numa sala dos Diários Associados." },
+
+  { page:"p. 37", topic:"Bienais",
+    q:"Qual alternativa descreve corretamente a I Bienal de São Paulo, de 1951?",
+    o:["Inspirada na Bienal de Paris, foi no Ibirapuera e premiou Lasar Segall.",
+       "Inspirada na Bienal de Veneza, foi num pavilhão no Trianon e premiou Max Bill.",
+       "Organizada por Chateaubriand, foi dentro do Masp e premiou Candido Portinari.",
+       "Organizada pelo governo federal, foi no Rio de Janeiro e premiou Pablo Picasso."],
+    a:1, hint:"Não confunda a I com a II Bienal!",
+    ex:"Foi idealizada por Ciccillo Matarazzo e reuniu 23 países. Max Bill ganhou com Unidade tripartida. Guernica e as telas de Picasso estavam na II Bienal (1953), no Ibirapuera." },
+
+  { page:"p. 38", topic:"Movimento Concreto",
+    q:"Qual foi o papel do suíço Max Bill na arte brasileira dos anos 1950?",
+    o:["Divulgou o Surrealismo, baseado nos sonhos, e inspirou Ismael Nery e Cícero Dias.",
+       "Divulgou o Expressionismo, baseado nas emoções, e inspirou Anita Malfatti e Segall.",
+       "Divulgou o Cubismo, baseado em vários pontos de vista, e inspirou Tarsila e Di Cavalcanti.",
+       "Divulgou a arte concreta, baseada na matemática, e inspirou os grupos Ruptura e Frente."],
+    a:3, hint:"Ele fundou a Escola Superior da Forma, em Ulm.",
+    ex:"A arte concreta é estruturada a partir de relações matemáticas e geométricas. A exposição de Max Bill no Masp e o prêmio na I Bienal apontaram o caminho dos artistas brasileiros." },
+
+  { page:"p. 39", topic:"Grupo Ruptura",
+    q:"No Manifesto Ruptura (1952), escrito por Waldemar Cordeiro, o que o grupo chamava de \"velho\"?",
+    o:["A arte geométrica e o design, que usavam a matemática para criar formas.",
+       "A arte popular e o folclore, que usavam temas regionais para mostrar a cultura do Brasil.",
+       "A arte figurativa e a Abstração Informal, que usava a abstração para expressar emoções.",
+       "A fotografia e o cinema, que usavam máquinas para registrar a realidade."],
+    a:2, hint:"Para eles, arte não devia representar a realidade nem emoções.",
+    ex:"A arte concreta trabalha só com formas, linhas, planos e cores. A crítica de Sérgio Milliet ao grupo deu início às polêmicas dos anos 1950." },
+
+  { page:"pp. 39–40", topic:"Geraldo de Barros",
+    q:"Qual ideia do Grupo Ruptura Geraldo de Barros colocou em prática na sua carreira?",
+    o:["A arte a serviço da indústria: fundou empresas de móveis e de identidade visual.",
+       "A arte a serviço da religião: pintou murais para igrejas e capelas do interior.",
+       "A arte a serviço do governo: criou cartazes de propaganda para o Estado Novo.",
+       "A arte a serviço do teatro: criou cenários e figurinos para companhias paulistas."],
+    a:0, hint:"Pense em móveis e design.",
+    ex:"Ele fundou a cooperativa de móveis Unilabor (1954), o escritório Form-Inform (1957) e a Hobjeto (1964). Também criou as Fotoformas e estudou em Ulm." },
+
+  { page:"p. 43", topic:"Ruptura × Frente",
+    q:"Na I Exposição Nacional de Arte Concreta (1956–57), qual era a diferença entre os paulistas (Ruptura) e os cariocas (Frente)?",
+    o:["Paulistas: experimentação e intuição. Cariocas: pura visualidade da forma.",
+       "Paulistas: volta à pintura figurativa. Cariocas: defesa do ensino acadêmico.",
+       "Paulistas: temas nacionalistas. Cariocas: forte influência do Surrealismo.",
+       "Paulistas: pura visualidade da forma. Cariocas: experimentação e intuição."],
+    a:3, hint:"O Grupo Frente já valorizava a experimentação (p. 41).",
+    ex:"Depois da mostra, o Grupo Frente rompeu com os paulistas. Dois anos depois, parte dos cariocas criou o Neoconcretismo." },
+
+  { page:"pp. 43–45", topic:"Neoconcretismo",
+    q:"O que o Manifesto Neoconcreto (1959) defendia?",
+    o:["Rigor matemático, regras fixas e separação total entre a obra e o público.",
+       "Liberdade de experimentação, expressão emocional e participação do público.",
+       "Volta à pintura acadêmica, aos retratos clássicos e às técnicas tradicionais.",
+       "Arte engajada, temas sociais e apoio às reformas propostas por Goulart."],
+    a:1, hint:"Pense nos Bichos de Lygia Clark, que o público manipula.",
+    ex:"O manifesto reagia ao exagero racionalista da arte concreta. Foi assinado por Lygia Clark, Lygia Pape, Ferreira Gullar, Franz Weissmann e Amílcar de Castro. Oiticica seguiu essa linha com os Parangolés e a Tropicália." },
+
+  { page:"pp. 46–47", topic:"Artes Gráficas",
+    q:"Qual alternativa sobre as artes gráficas está correta?",
+    o:["As maiores influências vieram do Impressionismo, e a Klaxon tinha visual tradicional.",
+       "As maiores influências vieram do Barroco, e a Klaxon era uma revista sobre cinema.",
+       "As maiores influências vieram da Bauhaus, e a Klaxon tinha diagramação ousada.",
+       "As maiores influências vieram do Romantismo, e a Klaxon circulou por vinte anos."],
+    a:2, hint:"Lembre do cartaz russo de Rodtchenko e da letra A gigante na capa da Klaxon.",
+    ex:"As maiores influências foram o Construtivismo russo e a Bauhaus. A Klaxon (maio de 1922 a janeiro de 1923) tem esse nome por causa da buzina de automóvel e foi criada pelos participantes da Semana de 22." },
+
+  { page:"pp. 48–49", topic:"Design e Poesia Concreta",
+    q:"Qual alternativa sobre o design e a poesia está correta?",
+    o:["Aloísio Magalhães fez o cartaz da I Bienal a partir das cores da bandeira do Brasil.",
+       "Décio Pignatari fundou o primeiro curso de desenho industrial na Escola de Belas-Artes.",
+       "Mário de Andrade criou a poesia concreta na revista Noigandres, em 1952.",
+       "Aloísio Magalhães fez o símbolo do IV Centenário do Rio a partir da cruz de malta."],
+    a:3, hint:"Três alternativas trocam o autor de cada trabalho.",
+    ex:"O cartaz da I Bienal é de Antônio Maluf. O primeiro curso de desenho industrial foi o do IAC, no Masp. A poesia concreta é de Décio Pignatari e dos irmãos Campos, na Noigandres." }
+];
+
+const TIME = 30, CIRC = 2*Math.PI*33;
+const $ = id => document.getElementById(id);
+let mode="solo", order=[], idx=0, scores=[0,0], streak=0, turn=0, answered=false, tick=null, left=TIME, log=[];
+
+$("arc").style.strokeDasharray = CIRC;
+
+$("modeSeg").querySelectorAll("button").forEach(b => b.onclick = () => {
+  $("modeSeg").querySelectorAll("button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); mode = b.dataset.mode;
+  $("teamInputs").classList.toggle("hidden", mode !== "teams");
+});
+
+const teamName = i => ($("t"+(i+1)).value || "Equipe "+(i+1)).trim();
+const teamColor = i => i===0 ? "var(--c1)" : "var(--c4)";
+function show(id){ ["start","game","end"].forEach(s => {
+  const el = $(s); el.classList.toggle("hidden", s!==id);
+  if (s===id){ el.style.animation="none"; el.offsetHeight; el.style.animation=""; }
+});}
+
+function start(){
+  idx=0; scores=[0,0]; streak=0; turn=0; log=[];
+  order = QUESTIONS.map(q => {
+    const opts = q.o.map((t,i) => ({t, right:i===q.a}));
+    if ($("shuffle").checked) opts.sort(() => Math.random()-.5);
+    return {...q, opts};
+  });
+  $("dots").innerHTML = order.map(() => "<i></i>").join("");
+  show("game"); render();
+}
+
+function renderChips(bumpIdx){
+  let h;
+  if (mode==="solo"){
+    h = `<span class="chip ${bumpIdx===0?"bump":""}">⭐ ${scores[0]} / ${order.length}</span>`;
+    if (streak>=2) h += `<span class="chip streak bump">🔥 ${streak} seguidas</span>`;
+  } else {
+    h = [0,1].map(i => `<span class="chip ${i===turn&&!answered?"active":""} ${bumpIdx===i?"bump":""}"><i class="sw" style="background:${teamColor(i)}"></i>${teamName(i)} · ${scores[i]}</span>`).join("");
+  }
+  $("chips").innerHTML = h;
+}
+
+function render(){
+  answered=false;
+  const q = order[idx];
+  [...$("dots").children].forEach((d,i) => d.classList.toggle("cur", i===idx));
+  $("qmeta").innerHTML = `Pergunta ${idx+1} de ${order.length} · <b>${q.topic}</b> · ${q.page}` +
+    (mode==="teams" ? ` · vez da <b style="color:${teamColor(turn)}">${teamName(turn)}</b>` : "");
+  $("question").textContent = q.q;
+  $("options").innerHTML = "";
+  q.opts.forEach((op,i) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.innerHTML = `<span class="badge"><small>${i+1}</small></span><span></span>`;
+    b.lastChild.textContent = op.t;
+    b.onclick = () => choose(i);
+    $("options").appendChild(b);
+  });
+  $("hint").textContent = q.hint; $("hint").style.display="none";
+  $("hintBtn").style.display = "";
+  $("feedback").style.display="none";
+  $("nextBtn").classList.add("hidden");
+  renderChips(); startTimer();
+}
+
+function setRing(){
+  $("arc").style.strokeDashoffset = CIRC*(1-Math.max(0,left)/TIME);
+  $("secs").textContent = Math.ceil(Math.max(0,left));
+  $("ring").classList.toggle("warn", left<=10);
+}
+function startTimer(){
+  clearInterval(tick);
+  const on = $("useTimer").checked;
+  $("ring").style.visibility = on ? "visible" : "hidden";
+  if (!on) return;
+  left=TIME; setRing();
+  tick = setInterval(() => { left-=.1; setRing(); if (left<=0){ clearInterval(tick); choose(-1); } }, 100);
+}
+
+function showHint(){ if (answered) return; $("hint").style.display="inline"; $("hintBtn").style.display="none"; }
+
+function choose(i){
+  if (answered) return;
+  answered=true; clearInterval(tick);
+  const q = order[idx], btns=[...$("options").children];
+  const ok = i>=0 && q.opts[i].right;
+  btns.forEach((b,j) => {
+    b.disabled=true;
+    if (q.opts[j].right) b.classList.add("right");
+    else if (j===i) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+  const who = mode==="teams" ? turn : 0;
+  if (ok){ scores[who]++; streak++; } else streak=0;
+  $("dots").children[idx].classList.remove("cur");
+  $("dots").children[idx].classList.add(ok?"ok":"bad");
+  log.push({q:q.q, right:q.opts.find(o=>o.right).t, ok});
+  const fb=$("feedback");
+  fb.className = "fb " + (ok?"ok":"bad");
+  fb.innerHTML = `<h3>${ok ? "Acertou! 🎉" : (i<0 ? "Tempo esgotado ⏰" : "Não foi dessa vez")}</h3>`;
+  fb.appendChild(document.createTextNode(q.ex));
+  fb.style.display="block";
+  $("hintBtn").style.display="none"; $("hint").style.display="none";
+  $("nextBtn").textContent = idx===order.length-1 ? "Ver resultado 🏁" : "Próxima →";
+  $("nextBtn").classList.remove("hidden");
+  $("nextBtn").scrollIntoView({behavior:"smooth",block:"nearest"});
+  renderChips(ok ? who : -1);
+  if (ok) confetti(30);
+}
+
+function next(){
+  if (!answered) return;
+  if (mode==="teams") turn = 1-turn;
+  idx++;
+  if (idx>=order.length) finish(); else render();
+}
+
+function finish(){
+  clearInterval(tick); show("end");
+  const n=order.length; let html;
+  if (mode==="solo"){
+    const p=scores[0];
+    $("endTitle").textContent = p===n ? "Gabaritou! 🏆" : p>=7 ? "Mandou muito bem!" : p>=4 ? "Bom trabalho!" : "Bora revisar?";
+    const msg = p===n ? "Digno de prêmio na Bienal." : p>=7 ? "A turma dominou o conteúdo." : p>=4 ? "Faltou pouco: vale reler alguns trechos." : "Releiam as páginas 36 a 49 e tentem de novo.";
+    html = `<div class="score-big grad">${p}/${n}</div><p class="msg">${msg}</p>`;
+    if (p>=7) confetti(150);
+  } else {
+    const [a,b]=scores, w = a===b ? -1 : (a>b?0:1);
+    $("endTitle").textContent = w<0 ? "Empate! 🤝" : `${teamName(w)} venceu! 🏆`;
+    html = `<div class="vs">${[0,1].map(i=>`<div class="${i===w?"win":""}"><div style="color:${teamColor(i)};font-weight:800">${teamName(i)}</div><div class="n">${scores[i]}</div></div>`).join("")}</div>`;
+    confetti(160);
+  }
+  $("endBody").innerHTML = html;
+  $("reviewList").innerHTML = "";
+  log.forEach(l => {
+    const li=document.createElement("li");
+    li.innerHTML = `${l.ok?"✅":"❌"} <span></span><br><b></b>`;
+    li.children[0].textContent = l.q; li.querySelector("b").textContent = "→ " + l.right;
+    $("reviewList").appendChild(li);
+  });
+}
+
+function confetti(n){
+  const cols=["#ff4d6d","#ffb703","#06d6a0","#4cc9f0","#8b5cf6"];
+  for (let i=0;i<n;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=cols[i%cols.length];
+    c.style.animationDuration=(1.6+Math.random()*2)+"s";
+    c.style.animationDelay=(Math.random()*.4)+"s";
+    if (i%3===0) c.style.borderRadius="50%";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4500);
+  }
+}
+
+function toggleFS(){
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+$("startBtn").onclick=start; $("againBtn").onclick=start;
+$("homeBtn").onclick=()=>show("start");
+$("nextBtn").onclick=next; $("hintBtn").onclick=showHint; $("fsBtn").onclick=toggleFS;
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName==="INPUT") return;
+  const k=e.key.toLowerCase();
+  if (k==="f") toggleFS();
+  if ($("game").classList.contains("hidden")) return;
+  if (["1","2","3","4"].includes(k)) choose(+k-1);
+  if (k==="enter") next();
+  if (k==="d") showHint();
+});
+</script>
+</body>
+</html>
